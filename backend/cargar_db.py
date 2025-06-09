@@ -9,3 +9,4 @@ if __name__ == "__main__":
         cargar_creditos("data/creditos.csv")
 
         cargar_pagos("data/pagos.csv")
+

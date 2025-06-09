@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from dbfread import DBF
 
+
 UPLOAD_FOLDER = "uploads"
 DATA_FOLDER = "data"
 

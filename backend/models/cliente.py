@@ -8,3 +8,4 @@ class Cliente(db.Model):
     telefono = db.Column(db.String)
     domicilio = db.Column(db.String)
     historial_atraso = db.Column(db.Integer, default=0)  # cantidad de cuotas atrasadas totales
+    estado = db.Column(db.String, default="pendiente")  # "excelente", "bueno", "remolon", "malo"
