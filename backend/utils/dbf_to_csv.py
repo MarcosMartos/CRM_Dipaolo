@@ -50,11 +50,12 @@ def convertir_crepag():
 
     df_final = df_final[['num_credito', 'num_cuota', 'vencimiento', 'fecha_pago', 'importe', 'importe_pago', 'vendedor']]
     df_final.to_csv(os.path.join(DATA_FOLDER, "pagos.csv"), index=False, encoding="utf-8-sig")
-    
-def generar_clientes():
-    df = pd.read_csv(os.path.join(DATA_FOLDER, "creditos.csv"), encoding="utf-8-sig")
 
-    df = df.rename(columns={
+def generar_clientes():
+    df_creditos = pd.read_csv(os.path.join(DATA_FOLDER, "creditos.csv"), encoding="utf-8-sig")
+    df_pagos = pd.read_csv(os.path.join(DATA_FOLDER, "pagos.csv"), encoding="utf-8-sig")
+
+    df = df_creditos.rename(columns={
         'APELLIDO': 'apellido',
         'DOCUMENTO': 'documento',
         'TELEFONO': 'telefono',
@@ -63,5 +64,35 @@ def generar_clientes():
 
     clientes = df[['apellido', 'documento', 'telefono', 'domicilio']].drop_duplicates(subset='documento')
     clientes['historial_atraso'] = 0
-    clientes = clientes[['apellido', 'documento', 'telefono', 'domicilio', 'historial_atraso']]
+
+    from datetime import datetime, timedelta
+    hoy = datetime.today().date()
+    hace_un_ano = hoy - timedelta(days=365)
+
+    def calcular_estado(doc):
+        creditos_cliente = df_creditos[df_creditos['DOCUMENTO'] == doc]
+        creditos_recientes = creditos_cliente[
+            pd.to_datetime(creditos_cliente['FECHREAL'], errors='coerce') >= pd.Timestamp(hace_un_ano)
+        ]
+        promedio = creditos_recientes['TOTFACT'].mean() if not creditos_recientes.empty else 0
+
+        num_creditos = creditos_cliente['NROCREDI'].dropna().astype(str).unique()
+        pagos_cliente = df_pagos[df_pagos['num_credito'].astype(str).isin(num_creditos)]
+
+        pagos_vencidos = pagos_cliente[
+            (pd.to_datetime(pagos_cliente['vencimiento'], errors='coerce') < pd.Timestamp(hoy)) &
+            (pagos_cliente['importe_pago'] < pagos_cliente['importe'])
+        ]
+
+        atrasos = pagos_vencidos.shape[0]
+
+        if atrasos == 0:
+            return "excelente" if promedio > 300000 else "bueno"
+        elif atrasos <= 2:
+            return "remolon"
+        else:
+            return "malo"
+
+    clientes["estado"] = clientes["documento"].apply(calcular_estado)
+
     clientes.to_csv(os.path.join(DATA_FOLDER, "clientes.csv"), index=False, encoding="utf-8-sig")

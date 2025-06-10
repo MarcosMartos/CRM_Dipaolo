@@ -4,7 +4,6 @@ import os
 
 from utils.dbf_to_csv import convertir_cremae, convertir_crepag, generar_clientes
 from utils.csv_to_db import cargar_creditos, cargar_pagos, cargar_clientes
-from utils.actualizar_clientes import actualizar_estado_clientes
 
 files_bp = Blueprint("files", __name__)
 UPLOAD_FOLDER = "uploads"
@@ -38,7 +37,6 @@ def upload_files():
         cargar_pagos("data/pagos.csv")
         cargar_clientes("data/clientes.csv")
 
-        actualizar_estado_clientes()
 
         return jsonify({"mensaje": "Archivos procesados y cargados correctamente"}), 200
 
