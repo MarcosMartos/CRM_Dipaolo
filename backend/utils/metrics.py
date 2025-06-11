@@ -39,55 +39,23 @@ def tasa_recuperacion():
     return round((pagado / total) * 100, 2) if total else 0
 
 # ====================== MÉTRICAS EXTENDIDAS ======================
+# Nuevas métricas basadas en el campo 'estado' que ya está calculado
 
-# Clientes pagadores: sin deuda
-def clientes_pagadores():
-    clientes_con_deuda = db.session.query(Pago.num_credito).filter(
-        Pago.importe_pago < Pago.importe
-    ).distinct().subquery()
+def clientes_excelentes():
+    return db.session.query(func.count()).filter(Cliente.estado == 'excelente').scalar()
 
-    total_clientes = db.session.query(func.count(Cliente.id)).scalar()
-    clientes_con_deuda_count = db.session.query(Credito).filter(
-        Credito.num_credito.in_(clientes_con_deuda)
-    ).distinct().count()
+def clientes_buenos():
+    return db.session.query(func.count()).filter(Cliente.estado == 'bueno').scalar()
 
-    return total_clientes - clientes_con_deuda_count
-
-# Clientes remolones: deuda leve (1-2 cuotas vencidas)
 def clientes_remolones():
-    hoy = date.today()
+    return db.session.query(func.count()).filter(Cliente.estado == 'remolon').scalar()
 
-    subq = db.session.query(
-        Pago.num_credito,
-        func.count(Pago.id).label("cuotas_atrasadas")
-    ).filter(
-        Pago.vencimiento < hoy,
-        Pago.importe_pago < Pago.importe
-    ).group_by(Pago.num_credito).subquery()
-
-    count = db.session.query(subq).filter(
-        subq.c.cuotas_atrasadas.between(1, 2)
-    ).count()
-
-    return count
-
-# Clientes malos: deuda grave (3+ cuotas vencidas)
 def clientes_malos():
-    hoy = date.today()
+    return db.session.query(func.count()).filter(Cliente.estado == 'malo').scalar()
 
-    subq = db.session.query(
-        Pago.num_credito,
-        func.count(Pago.id).label("cuotas_atrasadas")
-    ).filter(
-        Pago.vencimiento < hoy,
-        Pago.importe_pago < Pago.importe
-    ).group_by(Pago.num_credito).subquery()
+def clientes_total():
+    return db.session.query(func.count(Cliente.id)).scalar()
 
-    count = db.session.query(subq).filter(
-        subq.c.cuotas_atrasadas >= 3
-    ).count()
-
-    return count
 
 # Tasa de reincidencia (créditos que alguna vez estuvieron atrasados)
 def tasa_reincidencia():
