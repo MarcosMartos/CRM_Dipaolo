@@ -2,70 +2,48 @@ from models import db, Credito, Pago, Cliente
 from sqlalchemy import func
 from datetime import date
 
-# ====================== MÉTRICAS EXISTENTES ======================
-
-def cantidad_creditos():
+# === MÉTRICAS GENERALES ===
+def cantidad_creditos_totales():
     return db.session.query(func.count(Credito.id)).scalar()
 
-def importe_creditos():
+def importe_total_creditos():
     return db.session.query(func.sum(Credito.total_facturado)).scalar() or 0
 
-def pagado_creditos():
-    return db.session.query(func.sum(Pago.importe_pago)).scalar() or 0
+# === MÉTRICAS DE CRÉDITOS ACTIVOS ===
+def creditos_activos():
+    return db.session.query(Credito).filter(Credito.estado == "activo")
 
-def deuda_creditos():
-    return importe_creditos() - pagado_creditos()
+def cantidad_creditos_activos():
+    return creditos_activos().count()
 
-def creditos_atrasados():
-    hoy = date.today()
-    subq = db.session.query(Pago.num_credito).filter(
-        Pago.vencimiento < hoy,
-        Pago.importe_pago < Pago.importe
-    ).distinct()
-    return subq.count()
+def importe_total_activos():
+    return db.session.query(func.sum(Credito.total_facturado)).filter(Credito.estado == "activo").scalar() or 0
 
-def importe_atrasado():
-    hoy = date.today()
-    atrasados = db.session.query(Pago).filter(
-        Pago.vencimiento < hoy,
-        Pago.importe_pago < Pago.importe
-    )
-    total = sum(p.importe - (p.importe_pago or 0) for p in atrasados)
-    return total
+def pagado_total_activos():
+    activos = db.session.query(Credito.num_credito).filter(Credito.estado == "activo").subquery()
+    return db.session.query(func.sum(Pago.importe_pago)).filter(Pago.num_credito.in_(activos)).scalar() or 0
 
-def tasa_recuperacion():
-    total = importe_creditos()
-    pagado = pagado_creditos()
+def deuda_total_activos():
+    return importe_total_activos() - pagado_total_activos()
+
+def porcentaje_pagado():
+    total = importe_total_activos()
+    pagado = pagado_total_activos()
     return round((pagado / total) * 100, 2) if total else 0
 
-# ====================== MÉTRICAS EXTENDIDAS ======================
-# Nuevas métricas basadas en el campo 'estado' que ya está calculado
+def porcentaje_deuda():
+    total = importe_total_activos()
+    deuda = deuda_total_activos()
+    return round((deuda / total) * 100, 2) if total else 0
 
-def clientes_excelentes():
-    return db.session.query(func.count()).filter(Cliente.estado == 'excelente').scalar()
+# === MÉTRICAS DE CLIENTES POR ESTADO ===
+def total_clientes():
+    return db.session.query(Cliente).count()
 
-def clientes_buenos():
-    return db.session.query(func.count()).filter(Cliente.estado == 'bueno').scalar()
+def contar_clientes_por_estado(estado):
+    return db.session.query(Cliente).filter(Cliente.estado == estado).count()
 
-def clientes_remolones():
-    return db.session.query(func.count()).filter(Cliente.estado == 'remolon').scalar()
-
-def clientes_malos():
-    return db.session.query(func.count()).filter(Cliente.estado == 'malo').scalar()
-
-def clientes_total():
-    return db.session.query(func.count(Cliente.id)).scalar()
-
-
-# Tasa de reincidencia (créditos que alguna vez estuvieron atrasados)
-def tasa_reincidencia():
-    total_creditos = db.session.query(func.count(Credito.id)).scalar()
-
-    hoy = date.today()
-
-    atrasados = db.session.query(Pago.num_credito).filter(
-        Pago.vencimiento < hoy,
-        Pago.importe_pago < Pago.importe
-    ).distinct().count()
-
-    return round((atrasados / total_creditos) * 100, 2) if total_creditos else 0
+def porcentaje_clientes(estado):
+    total = total_clientes()
+    cantidad = contar_clientes_por_estado(estado)
+    return round((cantidad / total) * 100, 2) if total else 0

@@ -4,25 +4,31 @@ import { getToken, saveToken, logout as logoutFn } from "./Auth.jsx";
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
+  const [token, setToken] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = getToken();
-    setIsAuthenticated(!!token);
+    const storedToken = getToken();
+    if (storedToken) {
+      setToken(storedToken);
+      setIsAuthenticated(true);
+    }
   }, []);
 
-  const login = (token) => {
-    saveToken(token);
+  const login = (newToken) => {
+    saveToken(newToken);
+    setToken(newToken);
     setIsAuthenticated(true);
   };
 
   const logout = () => {
-    logoutFn(); // elimina el token y redirige
+    logoutFn();
+    setToken(null);
     setIsAuthenticated(false);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ token, isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
