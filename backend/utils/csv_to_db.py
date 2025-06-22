@@ -1,154 +1,99 @@
+import logging
+from flask import Blueprint, request
+from app.extensions import db
+from app.models import Cliente, Credito, Pago
 import pandas as pd
-from models import db, Credito, Pago, Cliente
-from datetime import datetime
+from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy import tuple_
 
-# Función general de limpieza
-def limpiar(valor, default=None):
-    if pd.isna(valor) or valor is None:
-        return default
-    return str(valor).strip()
+admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
-# Limpieza para documentos (quita puntos, espacios, etc.)
-def limpiar_documento(valor, default=None):
-    if pd.isna(valor) or valor is None:
-        return default
-    return str(valor).replace(".", "").replace(" ", "").strip()
-
-# Conversión segura a entero
-def to_int(valor, default=None):
+@admin_bp.route("/cargar_datos", methods=["POST"])
+def cargar_datos():
     try:
-        if pd.isna(valor) or valor is None or valor == '':
-            return default
-        return int(float(valor))
-    except:
-        return default
+        archivo_clientes = request.files['archivo_clientes']
+        archivo_creditos = request.files['archivo_creditos']
+        archivo_pagos = request.files['archivo_pagos']
 
-# Conversión segura de fechas
-def parse_fecha(fecha):
+        logging.info("Iniciando carga de clientes...")
+        df_clientes = pd.read_excel(archivo_clientes)
+        df_clientes = df_clientes.drop_duplicates(subset=['documento'])
+
+        stmt_clientes = insert(Cliente).values([
+            {
+                'apellido': row['apellido'],
+                'documento': row['documento'],
+                'telefono': row['telefono'],
+                'domicilio': row['domicilio'],
+                'historial_atraso': row['historial_atraso'],
+                'estado': row['estado']
+            } for _, row in df_clientes.iterrows()
+        ])
+        stmt_clientes = stmt_clientes.on_conflict_do_nothing(index_elements=['documento'])
+        db.session.execute(stmt_clientes)
+        db.session.commit()
+    except Exception as e:
+        logging.error(f"Error al cargar clientes: {e}")
+        db.session.rollback()
+
     try:
-        if pd.isna(fecha) or not fecha:
-            return None
-        fecha_str = str(int(float(fecha)))
-        return datetime.strptime(fecha_str, "%Y%m%d").date()
-    except:
-        try:
-            return datetime.strptime(str(fecha), "%Y-%m-%d").date()
-        except:
-            return None
+        logging.info("Iniciando carga de créditos...")
+        df_creditos = pd.read_excel(archivo_creditos)
 
-# Carga de créditos optimizada
-def cargar_creditos(ruta):
-    df = pd.read_csv(ruta, encoding="utf-8-sig")
-    existentes = set(r[0] for r in db.session.query(Credito.num_credito).all())
-    nuevos_creditos = []
+        df_creditos = df_creditos.astype({'num_credito': int, 'documento': str})
+        creditos_existentes = db.session.query(Credito.num_credito).filter(
+            Credito.num_credito.in_(df_creditos['num_credito'].tolist())
+        ).all()
+        creditos_existentes = set(row[0] for row in creditos_existentes)
 
-    for _, row in df.iterrows():
-        num_credito = to_int(row.get('NROCREDI'))
-        if not num_credito or num_credito in existentes:
-            continue
+        nuevos_creditos = [
+            {
+                'num_credito': int(row['num_credito']),
+                'documento': row['documento'],
+                'monto': row['monto'],
+                'cuotas': row['cuotas'],
+                'estado': row['estado']
+            }
+            for _, row in df_creditos.iterrows()
+            if int(row['num_credito']) not in creditos_existentes
+        ]
 
-        credito = Credito(
-            num_credito=num_credito,
-            apellido=limpiar(row.get('APELLIDO'), ''),
-            domicilio=limpiar(row.get('DOMICILIO'), ''),
-            telefono=limpiar(row.get('TELEFONO'), ''),
-            documento=limpiar(row.get('DOCUMENTO'), ''),
-            vendedor=to_int(row.get('VENDEDOR')),
-            sucursal=to_int(row.get('SUCURSAL')),
-            num_factura=to_int(row.get('NROFACT')),
-            total_facturado=to_int(row.get('TOTFACT')),
-            fecha_real=parse_fecha(row.get('FECHREAL')),
-            anticipo=to_int(row.get('ANTICIPO')),
-            financiacion=to_int(row.get('FINANCIA')),
-            num_cuotas=to_int(row.get('CUOTAS')),
-            vto_primer_cuota=parse_fecha(row.get('VTO1RA')),
-            artic1=limpiar(row.get('ARTIC1'), ''),
-            cant1=to_int(row.get('CANT1')),
-            artic2=limpiar(row.get('ARTIC2'), ''),
-            cant2=to_int(row.get('CANT2')),
-            artic3=limpiar(row.get('ARTIC3'), ''),
-            cant3=to_int(row.get('CANT3')),
-            artic4=limpiar(row.get('ARTIC4'), ''),
-            cant4=to_int(row.get('CANT4')),
-            artic5=limpiar(row.get('ARTIC5'), ''),
-            cant5=to_int(row.get('CANT5')),
-            artic6=limpiar(row.get('ARTIC6'), ''),
-            cant6=to_int(row.get('CANT6')),
-            artic7=limpiar(row.get('ARTIC7'), ''),
-            cant7=to_int(row.get('CANT7')),
-            garante=limpiar(row.get('GARANTE'), ''),
-            dom_garante=limpiar(row.get('DOMGARAN'), ''),
-            estado=limpiar(row.get('estado'), 'activo')
-        )
-        nuevos_creditos.append(credito)
+        if nuevos_creditos:
+            db.session.bulk_insert_mappings(Credito, nuevos_creditos)
+            db.session.commit()
+    except Exception as e:
+        logging.error(f"Error al cargar créditos: {e}")
+        db.session.rollback()
 
-    if nuevos_creditos:
-        db.session.bulk_save_objects(nuevos_creditos)
-        db.session.commit()
+    try:
+        logging.info("Iniciando carga de pagos...")
+        df_pagos = pd.read_excel(archivo_pagos)
 
-# Carga de pagos optimizada
-def cargar_pagos(ruta):
-    df = pd.read_csv(ruta, encoding="utf-8-sig")
-    creditos_existentes = set(r[0] for r in db.session.query(Credito.num_credito).all())
-    pagos_existentes = {(p.num_credito, p.num_cuota) for p in db.session.query(Pago.num_credito, Pago.num_cuota).all()}
-    nuevos_pagos = []
+        df_pagos = df_pagos.astype({'num_credito': int, 'cuota': int})
+        pagos_existentes = db.session.query(Pago.num_credito, Pago.cuota).filter(
+            tuple_(Pago.num_credito, Pago.cuota).in_([
+                (int(row['num_credito']), int(row['cuota'])) for _, row in df_pagos.iterrows()
+            ])
+        ).all()
+        pagos_existentes = set(pagos_existentes)
 
-    for _, row in df.iterrows():
-        num_credito = to_int(row.get('num_credito'))
-        num_cuota = to_int(row.get('num_cuota'))
+        nuevos_pagos = [
+            {
+                'num_credito': int(row['num_credito']),
+                'cuota': int(row['cuota']),
+                'monto_pagado': row['monto_pagado'],
+                'fecha_pago': row['fecha_pago']
+            }
+            for _, row in df_pagos.iterrows()
+            if (int(row['num_credito']), int(row['cuota'])) not in pagos_existentes
+        ]
 
-        if not num_credito or not num_cuota:
-            continue
-        if num_credito not in creditos_existentes:
-            continue
-        if (num_credito, num_cuota) in pagos_existentes:
-            continue
+        if nuevos_pagos:
+            db.session.bulk_insert_mappings(Pago, nuevos_pagos)
+            db.session.commit()
+    except Exception as e:
+        logging.error(f"Error al cargar pagos: {e}")
+        db.session.rollback()
 
-        pago = Pago(
-            num_credito=num_credito,
-            num_cuota=num_cuota,
-            vencimiento=parse_fecha(row.get('vencimiento')),
-            fecha_pago=parse_fecha(row.get('fecha_pago')),
-            importe=float(limpiar(row.get('importe'), 0)),
-            importe_pago=float(limpiar(row.get('importe_pago'), 0)),
-            vendedor=to_int(row.get('vendedor'))
-        )
-        nuevos_pagos.append(pago)
-
-    if nuevos_pagos:
-        db.session.bulk_save_objects(nuevos_pagos)
-        db.session.commit()
-
-# Carga de clientes (optimizada previamente)
-def cargar_clientes(ruta):
-    df = pd.read_csv(ruta, encoding="utf-8-sig")
-    nuevos_clientes = []
-
-    # Obtener documentos únicos del archivo
-    df['documento'] = df['documento'].astype(str).str.replace('.', '').str.strip()
-    df = df.drop_duplicates(subset='documento')
-
-    # Obtener documentos existentes en la DB
-    documentos_existentes = {
-        r[0] for r in db.session.query(Cliente.documento).all()
-    }
-
-    for _, row in df.iterrows():
-        doc = str(row.get('documento')).strip()
-        if not doc or doc in documentos_existentes:
-            continue
-
-        cliente = Cliente(
-            apellido=limpiar(row.get('apellido'), ''),
-            documento=doc,
-            telefono=limpiar(row.get('telefono'), ''),
-            domicilio=limpiar(row.get('domicilio'), ''),
-            historial_atraso=to_int(row.get('historial_atraso'), 0),
-            estado=limpiar(row.get('estado'), 'bueno')
-        )
-        nuevos_clientes.append(cliente)
-
-    if nuevos_clientes:
-        db.session.bulk_save_objects(nuevos_clientes)
-        db.session.commit()
-
+    logging.info("Carga completada.")
+    return "Datos cargados correctamente", 202

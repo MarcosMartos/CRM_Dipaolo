@@ -27,15 +27,16 @@ migrate = Migrate(app, db)
 
 # Importar blueprints
 from routes.auth import auth_bp
-from routes.admin import admin_bp
 from routes.files import files_bp
 from routes.metrics import metrics_bp
+from routes.admin import bp as admin_bp
 
 # Registrar blueprints
 app.register_blueprint(auth_bp, url_prefix="/auth")
-app.register_blueprint(admin_bp, url_prefix="/admin")
 app.register_blueprint(files_bp, url_prefix="/files")
 app.register_blueprint(metrics_bp, url_prefix="/metrics")
+app.register_blueprint(admin_bp, url_prefix="/admin")
+
 
 # Ruta base de prueba
 @app.route("/")

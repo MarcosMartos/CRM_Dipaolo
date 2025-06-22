@@ -1,9 +1,11 @@
-from flask import Blueprint, jsonify, g
-from auth import admin_required
+# backend/routes/admin.py
+from flask import Blueprint, jsonify
+from threading import Thread
+from cargar_todo import cargar_todo
 
-admin_bp = Blueprint("admin", __name__)
+bp = Blueprint('admin', __name__)
 
-@admin_bp.route("/dashboard")
-@admin_required
-def admin_zone():
-    return jsonify({"mensaje": f"Hola admin {g.user['email']}!"})
+@bp.route('/cargar_datos', methods=['POST'])
+def cargar_datos():
+    Thread(target=cargar_todo).start()
+    return jsonify({"mensaje": "Carga iniciada en segundo plano"}), 202
