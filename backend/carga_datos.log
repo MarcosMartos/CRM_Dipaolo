@@ -1,0 +1,115 @@
+2025-06-24 20:27:57,187 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-24 20:27:57,187 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-24 20:27:57,188 - INFO -  * Restarting with stat
+2025-06-24 20:27:58,123 - WARNING -  * Debugger is active!
+2025-06-24 20:27:58,128 - INFO -  * Debugger PIN: 451-315-796
+2025-06-24 20:34:12,584 - INFO - Resultado de carga: Carga y actualización completadas
+2025-06-24 20:34:12,584 - INFO - 127.0.0.1 - - [24/Jun/2025 20:34:12] "POST /admin/cargar_datos HTTP/1.1" 200 -
+2025-06-25 20:29:14,671 - ERROR - Error: Directory migrations already exists and is not empty
+2025-06-25 20:50:43,877 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-25 20:50:43,877 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-25 20:50:43,879 - INFO -  * Restarting with stat
+2025-06-25 20:50:44,894 - WARNING -  * Debugger is active!
+2025-06-25 20:50:44,944 - INFO -  * Debugger PIN: 451-315-796
+2025-06-25 20:51:31,149 - INFO - 127.0.0.1 - - [25/Jun/2025 20:51:31] "POST /auth/register HTTP/1.1" 200 -
+2025-06-25 20:51:43,012 - INFO - 127.0.0.1 - - [25/Jun/2025 20:51:43] "POST /auth/login HTTP/1.1" 200 -
+2025-06-25 21:08:49,367 - INFO - Resultado de carga: Carga y actualización completadas
+2025-06-25 21:08:49,367 - INFO - 127.0.0.1 - - [25/Jun/2025 21:08:49] "POST /admin/cargar_datos HTTP/1.1" 200 -
+2025-06-27 18:42:19,248 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-27 18:42:19,248 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 18:42:19,250 - INFO -  * Restarting with stat
+2025-06-27 18:42:20,277 - WARNING -  * Debugger is active!
+2025-06-27 18:42:20,307 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 18:43:01,051 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:01] "GET /api/metrics/creditos HTTP/1.1" 200 -
+2025-06-27 18:43:13,387 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:13] "GET /api/metrics/clientes HTTP/1.1" 200 -
+2025-06-27 18:43:37,641 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:37] "GET /api/metrics/creditos HTTP/1.1" 200 -
+2025-06-27 18:53:05,409 - INFO -  * Detected change in 'C:\\Users\\Marcos\\Proyectos\\Pasantías\\CRM_Dipaolo\\backend\\utils\\metrics.py', reloading
+2025-06-27 18:53:05,555 - INFO -  * Restarting with stat
+2025-06-27 18:53:06,576 - WARNING -  * Debugger is active!
+2025-06-27 18:53:06,581 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 18:53:21,594 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-27 18:53:21,594 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 18:53:21,595 - INFO -  * Restarting with stat
+2025-06-27 18:53:22,600 - WARNING -  * Debugger is active!
+2025-06-27 18:53:22,605 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 18:53:26,104 - INFO - 127.0.0.1 - - [27/Jun/2025 18:53:26] "GET /api/metrics/creditos HTTP/1.1" 200 -
+2025-06-27 18:55:16,000 - INFO -  * Detected change in 'C:\\Users\\Marcos\\Proyectos\\Pasantías\\CRM_Dipaolo\\backend\\utils\\metrics.py', reloading
+2025-06-27 18:55:16,142 - INFO -  * Restarting with stat
+2025-06-27 18:55:17,174 - WARNING -  * Debugger is active!
+2025-06-27 18:55:17,179 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 18:55:27,159 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-27 18:55:27,159 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 18:55:27,160 - INFO -  * Restarting with stat
+2025-06-27 18:55:28,270 - WARNING -  * Debugger is active!
+2025-06-27 18:55:28,275 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 18:55:31,267 - INFO - 127.0.0.1 - - [27/Jun/2025 18:55:31] "GET /api/metrics/creditos HTTP/1.1" 200 -
+2025-06-27 19:09:54,984 - INFO -  * Detected change in 'C:\\Users\\Marcos\\Proyectos\\Pasantías\\CRM_Dipaolo\\backend\\utils\\metrics.py', reloading
+2025-06-27 19:09:55,107 - INFO -  * Restarting with stat
+2025-06-27 19:09:56,169 - WARNING -  * Debugger is active!
+2025-06-27 19:09:56,174 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 19:10:03,326 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-27 19:10:03,326 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 19:10:03,327 - INFO -  * Restarting with stat
+2025-06-27 19:10:04,355 - WARNING -  * Debugger is active!
+2025-06-27 19:10:04,360 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 19:10:05,881 - INFO - 127.0.0.1 - - [27/Jun/2025 19:10:05] "GET /api/metrics/creditos HTTP/1.1" 200 -
+2025-06-27 19:16:17,802 - INFO - 127.0.0.1 - - [27/Jun/2025 19:16:17] "GET /api/metrics/clientes HTTP/1.1" 200 -
+2025-06-27 19:16:29,309 - INFO - 127.0.0.1 - - [27/Jun/2025 19:16:29] "[33mGET /api/metrics/c HTTP/1.1[0m" 404 -
+2025-06-27 19:16:30,786 - INFO - 127.0.0.1 - - [27/Jun/2025 19:16:30] "[33mGET /api/metrics/c HTTP/1.1[0m" 404 -
+2025-06-27 19:16:33,205 - INFO - 127.0.0.1 - - [27/Jun/2025 19:16:33] "GET /api/metrics/creditos HTTP/1.1" 200 -
+2025-06-27 19:44:19,738 - INFO -  * Detected change in 'C:\\Users\\Marcos\\Proyectos\\Pasantías\\CRM_Dipaolo\\backend\\utils\\metrics.py', reloading
+2025-06-27 19:44:19,858 - INFO -  * Restarting with stat
+2025-06-27 19:44:21,042 - WARNING -  * Debugger is active!
+2025-06-27 19:44:21,091 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 19:44:25,379 - INFO -  * Detected change in 'C:\\Users\\Marcos\\Proyectos\\Pasantías\\CRM_Dipaolo\\backend\\utils\\metrics.py', reloading
+2025-06-27 19:44:25,500 - INFO -  * Restarting with stat
+2025-06-27 19:44:26,549 - WARNING -  * Debugger is active!
+2025-06-27 19:44:26,553 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 19:46:06,563 - INFO -  * Detected change in 'C:\\Users\\Marcos\\Proyectos\\Pasantías\\CRM_Dipaolo\\backend\\utils\\metrics.py', reloading
+2025-06-27 19:46:06,681 - INFO -  * Restarting with stat
+2025-06-27 19:46:07,707 - WARNING -  * Debugger is active!
+2025-06-27 19:46:07,712 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 19:46:19,408 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-27 19:46:19,408 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 19:46:19,409 - INFO -  * Restarting with stat
+2025-06-27 19:46:20,435 - WARNING -  * Debugger is active!
+2025-06-27 19:46:20,439 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 19:46:22,126 - INFO - 127.0.0.1 - - [27/Jun/2025 19:46:22] "GET /api/metrics/creditos HTTP/1.1" 200 -
+2025-06-27 19:49:21,326 - INFO -  * Detected change in 'C:\\Users\\Marcos\\Proyectos\\Pasantías\\CRM_Dipaolo\\backend\\utils\\metrics.py', reloading
+2025-06-27 19:49:21,461 - INFO -  * Restarting with stat
+2025-06-27 19:49:22,485 - WARNING -  * Debugger is active!
+2025-06-27 19:49:22,490 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 19:49:29,190 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-27 19:49:29,190 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 19:49:29,191 - INFO -  * Restarting with stat
+2025-06-27 19:49:30,321 - WARNING -  * Debugger is active!
+2025-06-27 19:49:30,326 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 19:49:31,598 - INFO - 127.0.0.1 - - [27/Jun/2025 19:49:31] "GET /api/metrics/creditos HTTP/1.1" 200 -
+2025-06-27 20:08:09,618 - INFO -  * Detected change in 'C:\\Users\\Marcos\\Proyectos\\Pasantías\\CRM_Dipaolo\\backend\\utils\\metrics.py', reloading
+2025-06-27 20:08:09,747 - INFO -  * Restarting with stat
+2025-06-27 20:08:10,790 - WARNING -  * Debugger is active!
+2025-06-27 20:08:10,795 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 20:08:18,799 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-27 20:08:18,799 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 20:08:18,800 - INFO -  * Restarting with stat
+2025-06-27 20:08:19,857 - WARNING -  * Debugger is active!
+2025-06-27 20:08:19,862 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 20:08:20,905 - INFO - 127.0.0.1 - - [27/Jun/2025 20:08:20] "GET /api/metrics/creditos HTTP/1.1" 200 -
+2025-06-27 20:11:51,521 - INFO -  * Detected change in 'C:\\Users\\Marcos\\Proyectos\\Pasantías\\CRM_Dipaolo\\backend\\utils\\metrics.py', reloading
+2025-06-27 20:11:51,649 - INFO -  * Restarting with stat
+2025-06-27 20:12:38,832 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-27 20:12:38,832 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 20:12:38,834 - INFO -  * Restarting with stat
+2025-06-27 20:12:39,845 - WARNING -  * Debugger is active!
+2025-06-27 20:12:39,850 - INFO -  * Debugger PIN: 451-315-796
+2025-06-27 20:12:42,019 - INFO - 127.0.0.1 - - [27/Jun/2025 20:12:42] "GET /api/metrics/creditos HTTP/1.1" 200 -

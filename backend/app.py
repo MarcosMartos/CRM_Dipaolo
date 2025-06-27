@@ -3,7 +3,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 from flask_migrate import Migrate
-from models import db, Usuario, Credito, Pago, Cliente
+from models import db
 
 # Cargar variables de entorno
 load_dotenv()
@@ -24,18 +24,22 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Inicializar base de datos y migraciones
 db.init_app(app)
 migrate = Migrate(app, db)
+import logging
+
+logging.basicConfig(filename='carga_datos.log', level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Importar blueprints
 from routes.auth import auth_bp
 from routes.files import files_bp
-from routes.metrics import metrics_bp
 from routes.admin import bp as admin_bp
+from routes.metrics import metrics_bp
 
 # Registrar blueprints
 app.register_blueprint(auth_bp, url_prefix="/auth")
 app.register_blueprint(files_bp, url_prefix="/files")
-app.register_blueprint(metrics_bp, url_prefix="/metrics")
 app.register_blueprint(admin_bp, url_prefix="/admin")
+app.register_blueprint(metrics_bp)
 
 
 # Ruta base de prueba

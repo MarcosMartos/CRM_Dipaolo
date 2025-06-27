@@ -2,17 +2,20 @@ from flask import Blueprint, request, jsonify
 from auth import admin_required
 import os
 
-from utils.dbf_to_csv import convertir_cremae, convertir_crepag, generar_clientes
-from utils.csv_to_db import cargar_creditos, cargar_pagos, cargar_clientes
+from utils.convert_dbf_to_csv import convertir_creditos, convertir_pagos, generar_clientes
 
 files_bp = Blueprint("files", __name__)
 UPLOAD_FOLDER = "uploads"
+
+def ejecutar_procesamiento():
+    convertir_creditos()
+    convertir_pagos()
+    generar_clientes()
 
 @files_bp.route("/upload", methods=["POST"])
 @admin_required
 def upload_files():
     try:
-        # Validar archivos
         if 'cremae' not in request.files or 'crepag' not in request.files:
             return jsonify({"error": "Faltan archivos cremae o crepag"}), 400
 
@@ -22,23 +25,14 @@ def upload_files():
         if not os.path.exists(UPLOAD_FOLDER):
             os.makedirs(UPLOAD_FOLDER)
 
-        # Guardar archivos
         cremae_path = os.path.join(UPLOAD_FOLDER, "cremae.dbf")
         crepag_path = os.path.join(UPLOAD_FOLDER, "crepag.dbf")
         cremae.save(cremae_path)
         crepag.save(crepag_path)
 
-        # === PROCESO DE CONVERSIÓN Y CARGA ===
-        convertir_cremae()
-        convertir_crepag()
-        generar_clientes()
+        ejecutar_procesamiento()
 
-        cargar_creditos("data/creditos.csv")
-        cargar_pagos("data/pagos.csv")
-        cargar_clientes("data/clientes.csv")
-
-
-        return jsonify({"mensaje": "Archivos procesados y cargados correctamente"}), 200
+        return jsonify({"mensaje": "Archivos cargados y CSVs generados correctamente. Ejecutá /admin/cargar_datos para cargar en BD."}), 200
 
     except Exception as e:
         import traceback
