@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
 
       // Opcional: decodificar el token para mostrar nombre de usuario
       const payload = JSON.parse(atob(token.split(".")[1]));
-      setUser({ email: payload.sub });
+      setUser({ email: payload.email, nombre: payload.nombre });
 
       toast.success("Login exitoso");
       navigate("/dashboard");

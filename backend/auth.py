@@ -13,6 +13,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 def generar_token(usuario):
     payload = {
         "user_id": usuario.id,
+        "nombre": usuario.nombre,
         "email": usuario.email,
         "rol": usuario.rol
     }

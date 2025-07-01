@@ -3,22 +3,26 @@ import { useAuth } from "../context/AuthContext";
 import { Link, Outlet } from "react-router-dom";
 
 export default function Dashboard() {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
 
   return (
     <div className="flex h-screen">
-      <aside className="w-64 bg-gray-800 text-white flex flex-col p-4">
-        <h2 className="text-xl font-bold mb-6">Hola, {user?.nombre}</h2>
+      <aside className="w-64 bg-[#406B69] text-white flex flex-col p-4">
         <nav className="flex flex-col gap-2">
-          <Link to="metrics" className="hover:bg-gray-700 p-2 rounded">
+          <img
+            className="w-32 mx-auto mb-2"
+            src="../../public/loguito.webp"
+            alt="logo de di paolo"
+          />
+          <Link to="metrics" className="hover:bg-[#2c4b49] p-2 rounded">
             Ver métricas
           </Link>
-          <Link to="upload" className="hover:bg-gray-700 p-2 rounded">
+          <Link to="upload" className="hover:bg-[#213635] p-2 rounded">
             Cargar archivos
           </Link>
           <button
             onClick={logout}
-            className="mt-auto bg-red-500 hover:bg-red-600 p-2 rounded"
+            className="mt-auto bg-[#214b47] hover:bg-[#522f2f] p-2 rounded"
           >
             Salir
           </button>

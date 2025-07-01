@@ -39,27 +39,35 @@ export default function Upload() {
   };
 
   return (
-    <div className="max-w-xl mx-auto">
+    <div className="max-w-xl mx-auto mt-10 mb-10 px-4 flex flex-col items-center justify-center">
       <h1 className="text-3xl font-bold mb-6">Subir archivos DBF</h1>
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 bg-white p-6 rounded shadow"
+        className="flex flex-col items-center justify-center space-y-6 bg-white p-6 rounded shadow"
       >
         <div>
           <label className="block font-medium text-gray-700 mb-1">
             Archivo cremae.dbf
           </label>
-          <input type="file" onChange={(e) => setCremae(e.target.files[0])} />
+          <input
+            className="bg-[#eeeeee] p-2 rounded-sm"
+            type="file"
+            onChange={(e) => setCremae(e.target.files[0])}
+          />
         </div>
         <div>
           <label className="block font-medium text-gray-700 mb-1">
             Archivo crepag.dbf
           </label>
-          <input type="file" onChange={(e) => setCrepag(e.target.files[0])} />
+          <input
+            className="bg-[#eeeeee] p-2 rounded-sm"
+            type="file"
+            onChange={(e) => setCrepag(e.target.files[0])}
+          />
         </div>
         <button
           type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded disabled:opacity-50"
+          className="bg-[#406B69] hover:bg-[#2c4b49] text-white px-4 py-2 rounded disabled:opacity-50"
           disabled={loading}
         >
           {loading ? "Cargando..." : "Cargar archivos"}
